@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registratios: 'users/registrations' 
+    registratios: 'users/registrations'
   }
   resources :histories
 

@@ -6,6 +6,7 @@ class HistoriesController < ApplicationController
   # GET /histories.json
   def index
     @histories = History.all
+    @my_histories = History.where(user_id: helpers.current_user)
   end
 
   # GET /histories/1
@@ -20,6 +21,9 @@ class HistoriesController < ApplicationController
 
   # GET /histories/1/edit
   def edit
+    if @history.user_id != current_user.id &&  !current_user.admin
+      redirect_to root_path
+    end
   end
 
   # POST /histories
@@ -56,10 +60,14 @@ class HistoriesController < ApplicationController
   # DELETE /histories/1
   # DELETE /histories/1.json
   def destroy
-    @history.destroy
-    respond_to do |format|
-      format.html { redirect_to histories_url, notice: 'History was successfully destroyed.' }
-      format.json { head :no_content }
+    if @history.user_id != current_user.id &&  !current_user.admin
+      redirect_to root_path
+    else
+      @history.destroy
+      respond_to do |format|
+        format.html { redirect_to histories_url, notice: 'History was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 
